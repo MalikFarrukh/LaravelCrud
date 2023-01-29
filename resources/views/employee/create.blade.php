@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="address" class="form-label">Email</label>
+                        <label for="address" class="form-label">Address</label>
                         <Textarea name="address" rows="4" cols="30" placeholder="Enter Address" class="form-control">{{ old('address') }}</Textarea>
                     </div>
 
