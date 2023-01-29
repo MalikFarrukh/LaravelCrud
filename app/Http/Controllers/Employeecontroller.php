@@ -29,13 +29,7 @@ class Employeecontroller extends Controller
 
         if ( $validator->passes() ) {
 
-            // option #1
-            // Save data here
-            $employee = new Employee();
-            $employee->name = $request->name;
-            $employee->email = $request->email;
-            $employee->address = $request->address;
-            $employee->save();
+            $employee = Employee::create($request->post());
 
             // Upload image here
             if ($request->image) {
@@ -56,14 +50,12 @@ class Employeecontroller extends Controller
         }
     }
 
-    public function edit($id){
-
-        $employee = Employee::findOrFail($id);
+    public function edit(Employee $employee){
 
         return view('employee.edit',['employee' => $employee]);
     }
 
-    public function update($id, Request $request){
+    public function update(Employee $employee, Request $request){
         $validator = Validator::make($request->all(),[
             'name' => 'required',
             'email' => 'required',
@@ -72,13 +64,8 @@ class Employeecontroller extends Controller
 
         if ( $validator->passes() ) {
 
-            // option #1
             // Save data here
-            $employee = Employee::find($id);
-            $employee->name = $request->name;
-            $employee->email = $request->email;
-            $employee->address = $request->address;
-            $employee->save();
+            $employee->fill($request->post())->save();
 
             // Upload image here
             if ($request->image) {
@@ -98,12 +85,12 @@ class Employeecontroller extends Controller
 
         } else {
             // return with errrors
-            return redirect()->route('employees.edit', $id)->withErrors($validator)->withInput();
+            return redirect()->route('employees.edit', $employee->id)->withErrors($validator)->withInput();
         }
     }
 
-    public function destroy($id, Request $request){
-        $employee = Employee::findOrFail($id);
+    public function destroy(Employee $employee, Request $request){
+        
         File::Delete(public_path().'/uploads/employees/'. $employee->image);
         $employee->delete();
 
